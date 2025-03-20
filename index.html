@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Bop It</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section><h1>Building Bop It!</h1></section>
+        <section>
+          <h3>The classic 90's game</h3>
+          <img
+            src="https://i.etsystatic.com/6017061/r/il/61efc2/1143636323/il_1080xN.1143636323_6erb.jpg"
+          />
+        </section>
+        <section><h3>My version</h3><img src="images/the-game.jpg" class="r-stretch" /></section>
+        <section data-markdown>
+          ## Specs / Materials
+
+- **To run the game:** Raspberry Pi Pico W running MicroPython
+- **To bop it!:** TTP223B1 Touch Sensor
+- **To shake it!:** MPU6050 6DOF Sensor
+- **To slide it!:** Slide potentiometer
+- **To flick it!:** KY023 Joystick
+- **To instruct:** 16x2 LCD Display and Piezo Buzzer
+- **To power it:** 2AA Batteries!
+
+Total cost: ~$31, not including materials already available at the hub 😅
+        </section>
+        <section data-markdown>
+          ### Game Play
+- Player powers on game using battery switch.
+- Player touches the touch sensor to start the game.
+- In a loop, the game prompts (via the LCD) to perform one of the four actions (Beep, Shake, Flick, or Slide).
+- Similar to Bop It!, player attempts to perform the actions as quickly as possible and go for a high score.
+- Player gets 3 wrong chances before they lose.
+        </section>
+        <section data-markdown class="shrink">
+          ### Game Input
+
+The sensors follow a number of different protocols:
+- **I2C:** Inter-Integrated Circuit, which is a two-pin input. The Pico has two sets of I2C pins, one which is used to read the accelerometer data, and the other to communicate with the LCD display.
+- **Analog:** Both the sliding potentiometer and the joystick return analog data, which takes up the three Pico analog pins. No converter needed!
+- **PWM (Pulse Width Modulation):** The Pico uses PWM to control the buzzer, varying the duty cycle to produce different tones.
+        </section>
+        <section data-markdown>
+          ### Reading from a sensor
+
+```python
+from machine import Pin, ADC
+JOYSTICK_X_PIN = 27
+JOYSTICK_Y_PIN = 26
+vrx = ADC(Pin(JOYSTICK_X_PIN))
+vry = ADC(Pin(JOYSTICK_Y_PIN))
+joystick_x_position = vrx.read_u16()
+joystick_y_position = vry.read_u16()
+```
+        </section>
+
+        <section data-markdown>
+          ### Trust the process
+- Prototype first using a breadboard
+- Connect to one sensor at a time
+- Document the schematic
+- Convert the prototype to a more permanent, wired device
+- Design and print the housing
+- Assemble and hope you haven't broken something during all those steps
+- Debug, debug, debug
+        </section>
+
+        <section>
+          <img src="images/Bop It_bb.png" />
+        </section>
+<section> <img src="images/breadboard stuff.jpg"/></section>
+<section>
+<img src="images/stuff.jpg"/>
+</section>
+        <section>
+
+          <img src="images/box 3d design.gif" />
+        </section>
+<section><img src="images/3d print.jpg"/></section>
+        <section><h3>Altogether now</h3><img src="images/the-game.jpg" class="r-stretch" /></section>
+<section data-markdown>
+## (A Few) Lessons Learned
+
+- Soldering is _really_ hard (for me) 😩
+- If something's broken, it's _probably_ the wiring 🤦‍♀️
+- Gotta handle those debounces 👈
+- Audio is kinda complicated 🔊
+- Analog inputs fluctuate slightly, so the application logic needs to account for it 🔀
+</section>
+<section>
+Thanks!
+</section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
